@@ -1,6 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToOne} from "typeorm";
 import { IsEmail } from 'class-validator';
-import Profile from "./Profile";
+import { Exclude } from 'class-transformer';
+import Permission from "./Permission";
 
 @Entity('users')
 class User {
@@ -14,7 +15,8 @@ class User {
     @Column({ nullable: false, unique: true })
     login: string;
 
-    @Column({ nullable: false })
+    @Column()
+    @Exclude()
     password: string;
 
     @Column({ nullable: false })
@@ -22,11 +24,14 @@ class User {
     email: string;
 
     @Column({ name: 'password_reset_expiration' })
+    @Exclude()
     passwordResetExpiration: Date; 
 
+    @Exclude()
     @Column({ name: 'password_reset_token' })
     passwordResetToken: string;
 
+    @Exclude()
     @Column({ name: 'is_activated', default: 0 })
     isActivated: boolean;
 
@@ -36,9 +41,9 @@ class User {
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
 
-    @ManyToOne(type => Profile)
-    @JoinColumn({ name: 'profile_id' })
-    profile: Profile;
+    @ManyToOne(type => Permission)
+    @JoinColumn({ name: 'permission_id' })
+    permission: Permission;
 
 }
 

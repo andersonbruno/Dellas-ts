@@ -102,3 +102,12 @@ dist
 
 # TernJS port file
 .tern-port
+
+# ignore config folder
+/src/config/
+
+# ormconfig.js
+ormconfig.js
+
+# ignore custom_typings folder
+/src/custom_typings

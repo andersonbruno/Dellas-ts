@@ -1,10 +1,10 @@
 import { getCustomRepository } from 'typeorm';
 import UserRepository from "../repositories/UserRepository";
-import ProfileRepository from "../repositories/ProfileRepository";
-import User from "../models/User";
-import Profile from "../models/Profile";
+import PermissionRepository from "../repositories/PermissionRepository";
+import User from "../entities/User";
 import bcryptjs from 'bcryptjs';
 import crypto from 'crypto';
+import { classToClass } from 'class-transformer';
 
 export default class CreateUserService {
     private userRepository: UserRepository;
@@ -15,15 +15,15 @@ export default class CreateUserService {
 
     public async execute({email, login, name, password}: User){
         
-        const users = await this.userRepository.findByLogin(login);
+        const user = await this.userRepository.findByLogin(login);
         
         //if user exists, return the user from the db
-        if(users){
-            return users;
+        if(user){
+            return classToClass(user);
         }
 
-        //get default profile
-        const profile = await getCustomRepository(ProfileRepository).findByName('Default');
+        //get default permission
+        const permission = await getCustomRepository(PermissionRepository).findByName('Default');
         
         //generate token to activate user account
         const token = crypto.randomBytes(20).toString('hex');
@@ -34,16 +34,16 @@ export default class CreateUserService {
 
         const hash = await bcryptjs.hash(password, 10);
 
-        const user = await this.userRepository.save({
+        const newUser = await this.userRepository.save({
             login,
             password: hash,
             name,
             email,
-            profile,
+            permission,
             passwordResetToken: token,
             passwordResetExpiration: now,
         });
 
-        return user;
+        return classToClass(newUser);
     }
 }

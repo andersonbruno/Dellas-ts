@@ -1,7 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn} from "typeorm";
 
-@Entity('profiles')
-class Profile {
+@Entity('permissions')
+class Permission {
 
     @PrimaryGeneratedColumn()
     id: number;
@@ -17,4 +17,4 @@ class Profile {
 
 }
 
-export default Profile;
+export default Permission;

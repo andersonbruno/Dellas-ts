@@ -52,7 +52,7 @@ export class CreateProfile11598126137852 implements MigrationInterface {
                         default: false,
                     },
                     {
-                        name: 'profile_id',
+                        name: 'permission_id',
                         type: 'int',
                         isNullable: true,
                     },
@@ -73,10 +73,10 @@ export class CreateProfile11598126137852 implements MigrationInterface {
         await queryRunner.createForeignKey(
             'users',
             new TableForeignKey({
-                name: 'ProfileUser',
-                columnNames: ['profile_id'],
+                name: 'PermissionUser',
+                columnNames: ['permission_id'],
                 referencedColumnNames: ['id'],
-                referencedTableName: 'profiles',
+                referencedTableName: 'permissions',
                 onDelete: 'SET NULL',
                 onUpdate: 'CASCADE',
             }),
@@ -84,7 +84,7 @@ export class CreateProfile11598126137852 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropForeignKey('users', 'ProfileUser');
+        await queryRunner.dropForeignKey('users', 'PermissionUser');
 
         await queryRunner.dropTable('users');
     }
