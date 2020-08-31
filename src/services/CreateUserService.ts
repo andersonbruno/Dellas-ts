@@ -19,7 +19,7 @@ export default class CreateUserService {
         
         //if user exists, return the user from the db
         if(user){
-            return classToClass(user);
+            throw new Error('User already registered');
         }
 
         //get default permission

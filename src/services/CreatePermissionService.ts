@@ -1,4 +1,5 @@
 import PermissionRepository from "../repositories/PermissionRepository";
+import Permission from '../entities/Permission';
 
 export default class CreatePermissionService {
     private repository: PermissionRepository;
@@ -7,16 +8,18 @@ export default class CreatePermissionService {
         this.repository = repository;
     }
 
-    public async execute(name: string){
-        const users = await this.repository.findByName(name);
-        if(users){
-            return users;
-        }else{
-            const permission = await this.repository.save({
-                name
-            });
-
-            return permission;
+    public async execute(name: string): Promise<Permission>{
+        const permissions = await this.repository.findByName(name);
+        
+        if(permissions){
+            throw new Error('Permission already registered');
         }
+            
+        const permission = await this.repository.save({
+            name
+        });
+
+        return permission;
+        
     }
 }
