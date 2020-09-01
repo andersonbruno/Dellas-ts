@@ -1,4 +1,10 @@
 import UserRepository from "../repositories/UserRepository";
+import { getCustomRepository } from 'typeorm';
+import bcryptjs from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { classToClass } from 'class-transformer';
+
+import authConfig from '../config/auth.json';
 
 export default class AuthenticateUserService {
     private userRepository: UserRepository;
@@ -7,18 +13,23 @@ export default class AuthenticateUserService {
         this.userRepository = repository;
     }
 
-    public async execute(scheme: string, token: string){
-        /*if(!/^Bearer$/i.test(scheme)){
-            return res.status(401).send({ error: 'Token malformatted'});
+    public async execute(login: string, password: string){
+        const repository = getCustomRepository(UserRepository);
+
+        const user = await repository.findByLogin(login);
+
+        if(!user){
+            throw new Error('User not found');
         }
 
-        jwt.verify(token, authConfig.secret, (err, decoded) => {
-            if(err) {
-                return res.status(401).send({error: 'Token invalid'});
-            }
+        if(!await bcryptjs.compare(password, user.password)){
+            throw new Error('Invalid password');
+        }
 
-            req.userId = decoded.id;
-            return next();
-        });*/
+        const token = jwt.sign({ id: user.id }, authConfig.secret, {
+            expiresIn: 86400,
+        });
+
+        return { user: classToClass(user), token};
     }
 }
