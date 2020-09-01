@@ -6,14 +6,14 @@ import PermissionRepository from '../repositories/PermissionRepository';
 let repository: PermissionRepository;
 let createPermissionService: CreatePermissionService;
 
-beforeAll(async ()=>{
+beforeAll(async () => {
     await connection.create();
 
     repository = getCustomRepository(PermissionRepository);
     createPermissionService = new CreatePermissionService(repository);
 });
 
-afterAll(async ()=>{
+afterAll(async () => {
     await connection.close();
 });
 
@@ -28,5 +28,7 @@ it('should create a new permission', async () => {
 });
 
 it('should not create a duplicated permission', async () => {
+    await createPermissionService.execute("Test");
+
     await expect(createPermissionService.execute("Test")).rejects.toBeInstanceOf(Error);
 });

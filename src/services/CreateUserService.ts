@@ -1,10 +1,16 @@
 import { getCustomRepository } from 'typeorm';
 import UserRepository from "../repositories/UserRepository";
 import PermissionRepository from "../repositories/PermissionRepository";
-import User from "../entities/User";
 import bcryptjs from 'bcryptjs';
 import crypto from 'crypto';
 import { classToClass } from 'class-transformer';
+
+interface IRequest {
+    email: string;
+    login: string;
+    name: string;
+    password: string;
+}
 
 export default class CreateUserService {
     private userRepository: UserRepository;
@@ -13,9 +19,9 @@ export default class CreateUserService {
         this.userRepository = repository;
     }
 
-    public async execute({email, login, name, password}: User){
+    public async execute({email, login, name, password}: IRequest){
         
-        const user = await this.userRepository.findByLogin(login);
+        const user = await this.userRepository.findByLoginOrEmail(login, email);
         
         //if user exists, return the user from the db
         if(user){

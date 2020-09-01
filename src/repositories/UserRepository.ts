@@ -23,4 +23,14 @@ export default class UserRepository extends Repository<User> {
         });
     }
 
+    public async findByLoginOrEmail(login: string, email: string): Promise<User | undefined>{
+        return await this.findOne({
+            where: [
+                {login},
+                {email}
+            ],
+            relations: ["permission"]
+        })
+    }
+
 }
