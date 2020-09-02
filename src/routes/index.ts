@@ -6,9 +6,9 @@ import authMiddleware from '../middlewares/auth';
 
 const routes = Router();
 
-//routes.use(authMiddleware);
-routes.use('/permission', permissionRouter);
 routes.use('/user', userRouter);
 routes.use('/auth', authRouter);
+routes.use(authMiddleware);
+routes.use('/permission', permissionRouter);
 
 export default routes;

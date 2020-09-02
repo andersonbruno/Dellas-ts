@@ -1,5 +1,4 @@
 import UserRepository from "../repositories/UserRepository";
-import { getCustomRepository } from 'typeorm';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { classToClass } from 'class-transformer';
@@ -7,6 +6,7 @@ import { classToClass } from 'class-transformer';
 import authConfig from '../config/auth.json';
 
 export default class AuthenticateUserService {
+
     private userRepository: UserRepository;
 
     constructor(repository: UserRepository){
@@ -14,9 +14,7 @@ export default class AuthenticateUserService {
     }
 
     public async execute(login: string, password: string){
-        const repository = getCustomRepository(UserRepository);
-
-        const user = await repository.findByLogin(login);
+        const user = await this.userRepository.findByLogin(login);
 
         if(!user){
             throw new Error('User not found');
@@ -32,4 +30,5 @@ export default class AuthenticateUserService {
 
         return { user: classToClass(user), token};
     }
+    
 }
