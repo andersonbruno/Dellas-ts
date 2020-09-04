@@ -19,12 +19,6 @@ export default class ForgotPasswordService {
             throw new Error('Token invalid');
         }
 
-        const now = new Date();
-
-        if( now > user.passwordResetExpiration){
-            throw new Error('Token expired, generate a new one');
-        }
-
         user.isActivated = true;
 
         await this.userRepository.save(user);

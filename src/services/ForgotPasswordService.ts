@@ -38,13 +38,7 @@ export default class ForgotPasswordService {
             encoding: 'utf-8',
         });
         
-        let firstName = '';
-
-        if(user.name.includes(" ")){
-            firstName = user.name.split(" ")[0];
-        }else{
-            firstName = user.name;
-        }
+        const firstName = user.name.includes(" ") ? user.name.split(" ")[0] : user.name;
 
         const name = user.name;
 
@@ -53,5 +47,7 @@ export default class ForgotPasswordService {
         const template = parseTemplate({ name: firstName, token: user.passwordResetToken });
 
         mailer.sendMail({name: name,address: email},'Redefinição de senha',template);
+
+        return { mailSent: true};
     }
 }

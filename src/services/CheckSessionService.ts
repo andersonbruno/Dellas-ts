@@ -5,7 +5,7 @@ interface ITokenPayload {
     id: number
 }
 
-export default class ForgotPasswordService {
+export default class CheckSessionService {
 
     public execute(authHeader: string | undefined): number{
         if(!authHeader){

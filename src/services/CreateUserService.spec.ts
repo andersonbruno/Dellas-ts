@@ -26,20 +26,21 @@ beforeAll(async ()=>{
     createPermissionService = new CreatePermissionService(permissionRepository);
 
     user = {
-        name: 'Test User',
-        email: 'test@user.com',
+        name: 'User Test',
+        email: 'user@user.com',
         login: 'test',
         password: '1234'
     };
+});
+
+beforeEach(async ()=> {
+    await connection.clear();
 });
 
 afterAll(async ()=>{
     await connection.close();
 });
 
-beforeEach(async ()=> {
-    await connection.clear();
-});
 
 it('should create a new user', async () => {
     const permission = await createPermissionService.execute("Default");
@@ -54,13 +55,13 @@ it('should create a new user', async () => {
 
 it('should not create user with duplicated email', async () => {
     const user2 = {
-        name: 'Test User 2',
-        email: 'test@user.com',
+        email: 'user@user.com',
         login: 'test2',
+        name: 'Test User 2',
         password: '1234'
     }
 
-    await createUserService.execute(user);
+    const newUser = await createUserService.execute(user);
 
     await expect(createUserService.execute(user2)).rejects.toBeInstanceOf(Error);
 });
@@ -69,11 +70,11 @@ it('should not create user with duplicated login', async () => {
 
     const user2 = {
         name: 'Test User 2',
-        email: 'test2@user.com',
+        email: 'user2@user.com',
         login: 'test',
         password: '1234'
     }
-
+    
     await createUserService.execute(user);
 
     await expect(createUserService.execute(user2)).rejects.toBeInstanceOf(Error);
